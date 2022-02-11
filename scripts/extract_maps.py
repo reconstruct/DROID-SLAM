@@ -65,7 +65,7 @@ if __name__ == '__main__':
     parser.add_argument("--output_ply_file", type=str, help="path to save point cloud")
     parser.add_argument("--calib", type=str, help="path to calibration file")
     parser.add_argument("--t0", default=0, type=int, help="starting frame")
-    parser.add_argument("--stride", default=3, type=int, help="frame stride")
+    parser.add_argument("--stride", default=1, type=int, help="frame stride")
 
     parser.add_argument("--weights", default="droid.pth")
     parser.add_argument("--buffer", type=int, default=512)
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     num_imgs = len(list(Path(args.imagedir).iterdir()))
 
     tstamps = []
-    for (t, image, intrinsics) in tqdm(image_stream(args.imagedir, args.calib, args.stride), total=num_imgs):
+    for (t, image, intrinsics) in tqdm(image_stream(args.imagedir, args.calib, args.stride), total=num_imgs//args.stride):
         if t < args.t0:
             continue
 

@@ -83,7 +83,7 @@ class ReconstructClient:
             intrinsic = pc_calib['project_camera']['intrinsics']
         I = intrinsic
         W = I['width']
-        H = I['width']
+        H = I['height']
         f = I['focal']
 
         fx = f * max(W, H)
