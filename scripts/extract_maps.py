@@ -90,9 +90,10 @@ if __name__ == '__main__':
     torch.multiprocessing.set_start_method('spawn')
 
     droid = None
+    num_imgs = len(list(Path(args.imagedir).iterdir()))
 
     tstamps = []
-    for (t, image, intrinsics) in tqdm(image_stream(args.imagedir, args.calib, args.stride)):
+    for (t, image, intrinsics) in tqdm(image_stream(args.imagedir, args.calib, args.stride), total=num_imgs):
         if t < args.t0:
             continue
 
@@ -116,16 +117,15 @@ if __name__ == '__main__':
     points = droid_backends.iproj(lietorch.SE3(poses).inv().data, disps, video.intrinsics[0]).cpu()
     images = torch.index_select(video.images, 0, dirty_index)
     images = images.cpu()[:,[2,1,0],3::8,3::8].permute(0,2,3,1) / 255.0
-    thresh = 0.01 * torch.ones_like(disps.mean(dim=[1,2]))
+    thresh = 0.005 * torch.ones_like(disps.mean(dim=[1,2]))
 
     count = droid_backends.depth_filter(video.poses, video.disps, video.intrinsics[0], dirty_index, thresh)
     count = count.cpu()
     disps = disps.cpu()
-    # masks = ((count >= 2) & (disps > .5*disps.mean(dim=[1,2], keepdim=True)))
-    masks = (count >= 2).reshape(-1)
+    masks = ((count >= 2) & (disps > .5*disps.mean(dim=[1,2], keepdim=True))).reshape(-1)
 
     points = points.reshape(-1, 3)
-    masks = torch.ones_like(masks.reshape(-1))
+    # masks = torch.ones_like(masks.reshape(-1))
     images = images.reshape(-1, 3)
 
     pts = points[masks].cpu().numpy()

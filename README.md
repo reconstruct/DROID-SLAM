@@ -150,6 +150,6 @@ python scripts/download_data.py --bucket=BUCKET_NAME --prefix=PREFIX_NAME --outp
 
 ## Run DROID-SLAM and extract PLY
 ```
-# Downloading images / calibration from S3
-python scripts/download_data.py --bucket=BUCKET_NAME --prefix=PREFIX_NAME --output_folder=OUTPUT_FOLDER
+# Running PLY extraction using droid
+python scripts/extract_maps.py --weights=droid.pth --imagedir=OUTPUT_FOLDER/images --calib=OUTPUT_FOLDER/calibration.txt --disable_vis --output_ply_file=PATH_TO_SAVE_PLY
 ```
