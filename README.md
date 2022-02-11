@@ -137,3 +137,19 @@ python train.py --datapath=<path to tartanair> --gpus=4 --lr=0.00025
 
 ## Acknowledgements
 Data from [TartanAir](https://theairlab.org/tartanair-dataset/) was used to train our model. We additionally use evaluation tools from [evo](https://github.com/MichaelGrupp/evo) and [tartanair_tools](https://github.com/castacks/tartanair_tools).
+
+# RECONSTRUCT Specific arguments
+
+After installing the package, there are 2 scripts that allow downloading files from S3 as well as extracting sparse PLY file using DROID:
+
+## Fetching Data from S3
+```
+# Downloading images / calibration from S3
+python scripts/download_data.py --bucket=BUCKET_NAME --prefix=PREFIX_NAME --output_folder=OUTPUT_FOLDER
+```
+
+## Run DROID-SLAM and extract PLY
+```
+# Downloading images / calibration from S3
+python scripts/download_data.py --bucket=BUCKET_NAME --prefix=PREFIX_NAME --output_folder=OUTPUT_FOLDER
+```
