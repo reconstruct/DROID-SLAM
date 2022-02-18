@@ -98,7 +98,7 @@ if __name__ == '__main__':
         if droid is None:
             args.image_size = [image.shape[2], image.shape[3]]
             droid = Droid(args)
-        
+
         droid.track(t, image, intrinsics=intrinsics)
 
     traj_est = droid.terminate(image_stream(args.imagedir, args.calib, args.stride))

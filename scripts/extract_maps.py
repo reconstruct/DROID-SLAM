@@ -97,9 +97,6 @@ if __name__ == '__main__':
         if t < args.t0:
             continue
 
-        if not args.disable_vis:
-            show_image(image[0])
-
         if droid is None:
             args.image_size = [image.shape[2], image.shape[3]]
             droid = Droid(args)
@@ -111,7 +108,9 @@ if __name__ == '__main__':
 
     # write output to file
     video = droid.video
-    dirty_index = torch.where(video.dirty)[0]
+    dirty = video.dirty.clone()
+    dirty[:video.counter.value] = True
+    dirty_index, = torch.where(dirty)
     poses = torch.index_select(video.poses, 0, dirty_index)
     disps = torch.index_select(video.disps, 0, dirty_index)
     points = droid_backends.iproj(lietorch.SE3(poses).inv().data, disps, video.intrinsics[0]).cpu()
@@ -125,7 +124,6 @@ if __name__ == '__main__':
     masks = ((count >= 2) & (disps > .5*disps.mean(dim=[1,2], keepdim=True))).reshape(-1)
 
     points = points.reshape(-1, 3)
-    # masks = torch.ones_like(masks.reshape(-1))
     images = images.reshape(-1, 3)
 
     pts = points[masks].cpu().numpy()
